@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { AzureOpenAI } from "openai";
 import { getQuotesFormatted, getQuoteById } from "@/lib/quotes";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new AzureOpenAI({
+  endpoint: process.env.AZURE_OPENAI_ENDPOINT,
+  apiKey: process.env.AZURE_OPENAI_API_KEY,
+  apiVersion: "2024-10-21",
+});
 
 // Simple in-memory rate limiter: max 10 requests per minute per IP
 const rateLimit = new Map<string, number[]>();
@@ -48,7 +52,7 @@ export async function POST(request: NextRequest) {
     const quotesContext = getQuotesFormatted();
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "gpt-4o-mini",
       temperature: 0.7,
       response_format: { type: "json_object" },
       messages: [
