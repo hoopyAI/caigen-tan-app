@@ -15,7 +15,7 @@ export default function Header() {
         href="/browse"
         className="mt-4 inline-block rounded-lg bg-stone-100 px-4 py-1.5 text-sm text-stone-500 hover:bg-stone-200 transition"
       >
-        浏览全部菜根谭 →
+        浏览全部 →
       </Link>
     </header>
   );
