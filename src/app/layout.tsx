@@ -4,6 +4,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "菜根谭 — 说说你的心情",
   description: "输入你的心情，从菜根谭里找到一句说给你听的话",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "菜根谭",
+  },
 };
 
 export const viewport: Viewport = {
@@ -22,6 +28,15 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className="min-h-screen bg-stone-50 text-stone-900 antialiased">
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js');
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
