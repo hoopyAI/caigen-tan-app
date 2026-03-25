@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import type { Quote } from "@/types";
 import ShareTemplate from "./ShareTemplate";
 import { generateShareImage, downloadImage } from "@/lib/share";
@@ -19,6 +19,19 @@ export default function SharePreview({ quote, onClose }: SharePreviewProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const templateRef = useRef<HTMLDivElement>(null);
 
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   const handleSave = async () => {
     if (!templateRef.current) return;
     setIsGenerating(true);
@@ -31,8 +44,14 @@ export default function SharePreview({ quote, onClose }: SharePreviewProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl bg-white p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Template switcher */}
         <div className="mb-4 flex justify-center gap-2">
           {templates.map((t) => (
@@ -51,8 +70,8 @@ export default function SharePreview({ quote, onClose }: SharePreviewProps) {
         </div>
 
         {/* Preview */}
-        <div className="flex justify-center overflow-hidden rounded-xl">
-          <div style={{ transform: "scale(0.5)", transformOrigin: "top center" }}>
+        <div className="flex justify-center overflow-hidden rounded-xl" style={{ height: 400 }}>
+          <div style={{ transform: "scale(0.5)", transformOrigin: "top center", width: 600, height: 800 }}>
             <ShareTemplate
               ref={templateRef}
               quote={quote}

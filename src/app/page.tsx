@@ -23,6 +23,7 @@ export default function Home() {
   const [saved, setSaved] = useState(false);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [shareQuote, setShareQuote] = useState<Quote | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load initial random quote and favorites
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function Home() {
   const handleMoodSubmit = async (mood: string) => {
     setIsLoading(true);
     setIsVisible(false);
+    setError(null);
 
     try {
       const res = await fetch("/api/match", {
@@ -46,16 +48,22 @@ export default function Home() {
 
       const data = await res.json();
 
-      if (data.quote) {
-        // Small delay for fade-out to complete
-        setTimeout(() => {
-          setQuote(data.quote);
-          setSaved(isFavorited(data.quote.id));
-          setIsVisible(true);
-        }, 300);
+      if (!res.ok || !data.quote) {
+        setError(data.error || "匹配失败，请稍后再试");
+        setIsVisible(true); // re-show previous quote
+        return;
       }
-    } catch (error) {
-      console.error("Failed to match:", error);
+
+      // Small delay for fade-out to complete
+      setTimeout(() => {
+        setQuote(data.quote);
+        setSaved(isFavorited(data.quote.id));
+        setIsVisible(true);
+      }, 300);
+    } catch (err) {
+      console.error("Failed to match:", err);
+      setError("网络错误，请检查连接后重试");
+      setIsVisible(true);
     } finally {
       setIsLoading(false);
     }
@@ -79,6 +87,12 @@ export default function Home() {
     <main className="min-h-screen">
       <Header />
       <MoodInput onSubmit={handleMoodSubmit} isLoading={isLoading} />
+
+      {error && (
+        <div className="mx-auto mt-4 max-w-md px-6">
+          <p className="text-center text-sm text-red-400">{error}</p>
+        </div>
+      )}
 
       {quote && (
         <>

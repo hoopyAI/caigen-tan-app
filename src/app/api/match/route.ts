@@ -4,8 +4,30 @@ import { getQuotesFormatted, getQuoteById } from "@/lib/quotes";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Simple in-memory rate limiter: max 10 requests per minute per IP
+const rateLimit = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW = 60_000;
+const RATE_LIMIT_MAX = 10;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = rateLimit.get(ip)?.filter((t) => now - t < RATE_LIMIT_WINDOW) || [];
+  if (timestamps.length >= RATE_LIMIT_MAX) return true;
+  timestamps.push(now);
+  rateLimit.set(ip, timestamps);
+  return false;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "请求太频繁，请稍后再试" },
+        { status: 429 }
+      );
+    }
+
     const { mood } = await request.json();
 
     if (!mood || typeof mood !== "string" || mood.trim().length === 0) {
@@ -28,6 +50,7 @@ export async function POST(request: NextRequest) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.7,
+      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
