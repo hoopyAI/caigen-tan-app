@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import type { Quote } from "@/types";
-import ShareTemplate from "./ShareTemplate";
+import ShareTemplate, { type TemplateType } from "./ShareTemplate";
 import { generateShareImage, downloadImage } from "@/lib/share";
 
 interface SharePreviewProps {
@@ -10,12 +10,24 @@ interface SharePreviewProps {
   onClose: () => void;
 }
 
-const templates = ["ink", "minimal", "neo"] as const;
-const templateNames = { ink: "水墨", minimal: "极简", neo: "新中式" };
+const templates: TemplateType[] = [
+  "ink", "minimal", "neo", "mountain", "starfield", "redwall", "zen", "sunset", "porcelain",
+];
+
+const templateNames: Record<TemplateType, string> = {
+  ink: "水墨",
+  minimal: "深夜",
+  neo: "新中式",
+  mountain: "远山",
+  starfield: "星河",
+  redwall: "红墙",
+  zen: "枯山水",
+  sunset: "落霞",
+  porcelain: "青花",
+};
 
 export default function SharePreview({ quote, onClose }: SharePreviewProps) {
-  const [activeTemplate, setActiveTemplate] =
-    useState<(typeof templates)[number]>("ink");
+  const [activeTemplate, setActiveTemplate] = useState<TemplateType>("ink");
   const [isGenerating, setIsGenerating] = useState(false);
   const templateRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +49,7 @@ export default function SharePreview({ quote, onClose }: SharePreviewProps) {
     setIsGenerating(true);
     try {
       const dataUrl = await generateShareImage(templateRef.current);
-      downloadImage(dataUrl, `caigen-tan-${quote.id}.png`);
+      downloadImage(dataUrl, `caigen-tan-${quote.id}-${activeTemplate}.png`);
     } finally {
       setIsGenerating(false);
     }
@@ -52,8 +64,8 @@ export default function SharePreview({ quote, onClose }: SharePreviewProps) {
         className="w-full max-w-lg rounded-2xl bg-white p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Template switcher */}
-        <div className="mb-4 flex justify-center gap-2">
+        {/* Template switcher — wrapping grid */}
+        <div className="mb-4 flex flex-wrap justify-center gap-2">
           {templates.map((t) => (
             <button
               key={t}
