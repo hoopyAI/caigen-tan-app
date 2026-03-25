@@ -1,0 +1,83 @@
+"use client";
+
+import { useRef, useState } from "react";
+import type { Quote } from "@/types";
+import ShareTemplate from "./ShareTemplate";
+import { generateShareImage, downloadImage } from "@/lib/share";
+
+interface SharePreviewProps {
+  quote: Quote;
+  onClose: () => void;
+}
+
+const templates = ["ink", "minimal", "neo"] as const;
+const templateNames = { ink: "水墨", minimal: "极简", neo: "新中式" };
+
+export default function SharePreview({ quote, onClose }: SharePreviewProps) {
+  const [activeTemplate, setActiveTemplate] =
+    useState<(typeof templates)[number]>("ink");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const templateRef = useRef<HTMLDivElement>(null);
+
+  const handleSave = async () => {
+    if (!templateRef.current) return;
+    setIsGenerating(true);
+    try {
+      const dataUrl = await generateShareImage(templateRef.current);
+      downloadImage(dataUrl, `caigen-tan-${quote.id}.png`);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-lg rounded-2xl bg-white p-6">
+        {/* Template switcher */}
+        <div className="mb-4 flex justify-center gap-2">
+          {templates.map((t) => (
+            <button
+              key={t}
+              onClick={() => setActiveTemplate(t)}
+              className={`rounded-lg px-3 py-1.5 text-xs transition ${
+                activeTemplate === t
+                  ? "bg-stone-800 text-white"
+                  : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+              }`}
+            >
+              {templateNames[t]}
+            </button>
+          ))}
+        </div>
+
+        {/* Preview */}
+        <div className="flex justify-center overflow-hidden rounded-xl">
+          <div style={{ transform: "scale(0.5)", transformOrigin: "top center" }}>
+            <ShareTemplate
+              ref={templateRef}
+              quote={quote}
+              template={activeTemplate}
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="mt-4 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 rounded-xl bg-stone-100 py-2.5 text-sm text-stone-500 transition hover:bg-stone-200"
+          >
+            关闭
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={isGenerating}
+            className="flex-1 rounded-xl bg-stone-800 py-2.5 text-sm text-white transition hover:bg-stone-700 disabled:opacity-40"
+          >
+            {isGenerating ? "生成中…" : "保存图片"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
