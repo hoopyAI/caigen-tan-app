@@ -3,7 +3,7 @@
 import { forwardRef } from "react";
 import type { Quote } from "@/types";
 
-export type TemplateType = "ink" | "minimal" | "neo" | "mountain" | "starfield" | "redwall" | "zen" | "sunset" | "porcelain";
+export type TemplateType = "ink" | "minimal" | "mountain" | "starfield" | "redwall" | "zen" | "porcelain";
 
 interface ShareTemplateProps {
   quote: Quote;
@@ -153,49 +153,6 @@ function MinimalTemplate({ quote }: { quote: Quote }) {
 }
 
 /**
- * 新中式 — Muted green tones, layered abstract mountain shapes, organic texture
- */
-function NeoTemplate({ quote }: { quote: Quote }) {
-  return (
-    <div style={{ width: 600, height: 800, position: "relative", overflow: "hidden" }}>
-      {/* Base gradient */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(165deg, #eae8e0 0%, #ddd8cc 40%, #d5cfc0 70%, #e0dbd0 100%)" }} />
-      {/* Color washes */}
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 30% 70%, rgba(92,107,76,0.1) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(120,110,80,0.06) 0%, transparent 40%)" }} />
-      {/* Abstract mountain layers */}
-      <svg viewBox="0 0 600 800" style={{ position: "absolute", inset: 0, width: 600, height: 800 }}>
-        <polygon points="0,800 0,520 100,480 200,500 300,440 400,470 500,420 600,460 600,800" fill="#b5ad98" opacity="0.08" />
-        <polygon points="0,800 0,580 80,540 200,560 320,500 440,540 560,490 600,520 600,800" fill="#9a9480" opacity="0.1" />
-        <polygon points="0,800 0,640 120,600 250,620 380,570 500,610 600,580 600,800" fill="#807a68" opacity="0.08" />
-      </svg>
-      {/* Noise */}
-      {noiseOverlay(0.04)}
-      {/* Soft vignette */}
-      {vignette("60,55,40", 0.1)}
-      {/* Corner accents */}
-      <svg viewBox="0 0 60 60" style={{ position: "absolute", top: 36, right: 36, width: 36, height: 36, opacity: 0.2 }}>
-        <line x1="0" y1="0" x2="60" y2="0" stroke="#6b7a60" strokeWidth="1.5" />
-        <line x1="60" y1="0" x2="60" y2="60" stroke="#6b7a60" strokeWidth="1.5" />
-      </svg>
-      <svg viewBox="0 0 60 60" style={{ position: "absolute", bottom: 36, left: 36, width: 36, height: 36, opacity: 0.2 }}>
-        <line x1="0" y1="60" x2="0" y2="0" stroke="#6b7a60" strokeWidth="1.5" />
-        <line x1="0" y1="60" x2="60" y2="60" stroke="#6b7a60" strokeWidth="1.5" />
-      </svg>
-      {/* Content */}
-      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", padding: "64px 56px 52px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 20, height: 1, background: "rgba(92,107,76,0.4)" }} />
-          <p style={{ fontSize: 11, letterSpacing: "0.3em", color: "rgba(92,107,76,0.5)" }}>菜根谭</p>
-        </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 8px" }}>
-          <QuoteContent quote={quote} textColor="#36362e" subColor="#7a7568" sourceColor="#a8a290" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
  * 远山 — Rich layered mountains with mist, atmospheric depth, god rays
  */
 function MountainTemplate({ quote }: { quote: Quote }) {
@@ -307,77 +264,51 @@ function RedWallTemplate({ quote }: { quote: Quote }) {
 }
 
 /**
- * 枯山水 — Raked sand with concentric arcs, stone, horizontal lines, warm cream
+ * 枯山水 — Neo-Chinese style: sage green tones, corner accents, mountain layers + zen sand arcs
  */
 function ZenTemplate({ quote }: { quote: Quote }) {
   return (
     <div style={{ width: 600, height: 800, position: "relative", overflow: "hidden" }}>
-      {/* Warm cream base */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(175deg, #f0ece2 0%, #e8e2d5 30%, #e0d8c8 60%, #e8e2d6 100%)" }} />
-      {/* Warmth wash */}
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 60% 40%, rgba(180,160,120,0.06) 0%, transparent 50%)" }} />
-      {/* Sand texture — heavier noise */}
-      {noiseOverlay(0.07)}
-      {/* Zen patterns */}
+      {/* Base: warm cream with sage undertone */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(165deg, #eae8e0 0%, #e2ddd0 30%, #d8d2c4 55%, #e0dbd0 80%, #e5e0d6 100%)" }} />
+      {/* Sage green color washes */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 30% 65%, rgba(92,107,76,0.1) 0%, transparent 50%), radial-gradient(ellipse at 75% 25%, rgba(100,115,80,0.07) 0%, transparent 40%), radial-gradient(ellipse at 50% 45%, rgba(120,110,80,0.05) 0%, transparent 45%)" }} />
+      {/* Abstract mountain layers — bottom */}
       <svg viewBox="0 0 600 800" style={{ position: "absolute", inset: 0, width: 600, height: 800 }}>
-        {/* Concentric arcs around stone — bottom right */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-          <circle key={`a-${i}`} cx="500" cy="680" r={50 + i * 30} fill="none" stroke="#c0b8a8" strokeWidth="1" opacity={0.15 - i * 0.012} />
-        ))}
-        <circle cx="500" cy="680" r="12" fill="#c8c0b0" opacity="0.15" />
-        <circle cx="500" cy="680" r="5" fill="#b8b0a0" opacity="0.2" />
-        {/* Second smaller stone cluster — left side */}
-        {[0, 1, 2, 3, 4].map((i) => (
-          <circle key={`b-${i}`} cx="80" cy="600" r={20 + i * 22} fill="none" stroke="#c0b8a8" strokeWidth="0.8" opacity={0.1 - i * 0.015} />
-        ))}
-        <circle cx="80" cy="600" r="6" fill="#c0b8a8" opacity="0.15" />
-        {/* Horizontal rake lines — top area */}
-        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-          <line key={`l-${i}`} x1="0" y1={80 + i * 12} x2="600" y2={80 + i * 12} stroke="#c0b8a8" strokeWidth="0.6" opacity={0.1} />
-        ))}
+        <polygon points="0,800 0,540 80,500 180,520 280,460 380,490 480,430 580,470 600,450 600,800" fill="#a8a490" opacity="0.08" />
+        <polygon points="0,800 0,600 100,560 220,580 340,520 450,550 560,500 600,530 600,800" fill="#8a8670" opacity="0.1" />
+        <polygon points="0,800 0,660 130,620 260,640 390,590 510,620 600,590 600,800" fill="#706c58" opacity="0.07" />
       </svg>
-      {/* Soft vignette */}
-      {vignette("80,70,50", 0.08)}
-      {/* Content */}
-      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", padding: "68px 56px 52px" }}>
-        <div />
-        <div style={{ maxWidth: 430 }}>
-          <QuoteContent quote={quote} textColor="#40392e" subColor="#8a8278" sourceColor="#b8b0a0" />
-        </div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <p style={{ fontFamily: '"LXGW WenKai", serif', fontSize: 13, color: "#c0b8a8", letterSpacing: "0.2em" }}>菜根谭</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * 落霞 — Multi-stop sunset sky with cloud wisps, warm bokeh, horizon glow
- */
-function SunsetTemplate({ quote }: { quote: Quote }) {
-  return (
-    <div style={{ width: 600, height: 800, position: "relative", overflow: "hidden" }}>
-      {/* Rich sunset gradient */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #1e1535 0%, #3a2050 10%, #6a3060 22%, #a04858 35%, #cc6848 48%, #e09050 58%, #e8b868 68%, #f0d488 78%, #e8c870 88%, #d4a850 100%)" }} />
-      {/* Sun glow */}
-      <div style={{ position: "absolute", top: "50%", left: "40%", width: 300, height: 200, background: "radial-gradient(ellipse, rgba(255,220,140,0.2) 0%, rgba(255,180,100,0.1) 30%, transparent 60%)" }} />
-      {/* Cloud wisps */}
-      <div style={{ position: "absolute", top: "18%", left: 0, right: 0, height: 4, background: "linear-gradient(to right, transparent 5%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.06) 60%, transparent 80%)" }} />
-      <div style={{ position: "absolute", top: "22%", left: 0, right: 0, height: 2, background: "linear-gradient(to right, transparent 15%, rgba(255,255,255,0.05) 35%, rgba(255,255,255,0.08) 55%, transparent 75%)" }} />
-      <div style={{ position: "absolute", top: "38%", left: 0, right: 0, height: 3, background: "linear-gradient(to right, transparent 25%, rgba(255,200,150,0.06) 45%, rgba(255,200,150,0.08) 60%, transparent 85%)" }} />
-      {/* Warm bokeh */}
-      <div style={{ position: "absolute", top: "30%", left: "15%", width: 80, height: 80, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,200,120,0.06) 0%, transparent 70%)" }} />
-      <div style={{ position: "absolute", top: "45%", right: "20%", width: 60, height: 60, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,180,100,0.05) 0%, transparent 70%)" }} />
-      {/* Noise */}
+      {/* Zen sand arcs — bottom right */}
+      <svg viewBox="0 0 600 800" style={{ position: "absolute", inset: 0, width: 600, height: 800 }}>
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <circle key={`a-${i}`} cx="520" cy="720" r={40 + i * 28} fill="none" stroke="#b5ad98" strokeWidth="0.8" opacity={0.12 - i * 0.012} />
+        ))}
+        <circle cx="520" cy="720" r="8" fill="#b5ad98" opacity="0.12" />
+      </svg>
+      {/* Sand texture */}
       {noiseOverlay(0.05)}
-      {/* Vignette */}
-      {vignette("15,10,25", 0.3)}
+      {/* Soft vignette */}
+      {vignette("60,55,40", 0.1)}
+      {/* Corner accents — sage green */}
+      <svg viewBox="0 0 60 60" style={{ position: "absolute", top: 36, right: 36, width: 36, height: 36, opacity: 0.2 }}>
+        <line x1="0" y1="0" x2="60" y2="0" stroke="#6b7a60" strokeWidth="1.5" />
+        <line x1="60" y1="0" x2="60" y2="60" stroke="#6b7a60" strokeWidth="1.5" />
+      </svg>
+      <svg viewBox="0 0 60 60" style={{ position: "absolute", bottom: 36, left: 36, width: 36, height: 36, opacity: 0.2 }}>
+        <line x1="0" y1="60" x2="0" y2="0" stroke="#6b7a60" strokeWidth="1.5" />
+        <line x1="0" y1="60" x2="60" y2="60" stroke="#6b7a60" strokeWidth="1.5" />
+      </svg>
+      {/* Sage dot accent */}
+      <div style={{ position: "absolute", top: 76, left: 52, width: 6, height: 6, borderRadius: "50%", background: "rgba(92,107,86,0.2)" }} />
       {/* Content */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", padding: "64px 56px 52px" }}>
-        <p style={{ fontSize: 10, letterSpacing: "0.4em", color: "rgba(255,255,255,0.3)" }}>菜根谭</p>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <QuoteContent quote={quote} textColor="rgba(255,255,255,0.92)" subColor="rgba(255,240,220,0.45)" sourceColor="rgba(255,240,220,0.28)" />
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 20, height: 1, background: "rgba(92,107,76,0.4)" }} />
+          <p style={{ fontSize: 11, letterSpacing: "0.3em", color: "rgba(92,107,76,0.5)" }}>菜根谭</p>
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 8px" }}>
+          <QuoteContent quote={quote} textColor="#36362e" subColor="#7a7568" sourceColor="#a8a290" />
         </div>
       </div>
     </div>
@@ -446,12 +377,10 @@ const ShareTemplate = forwardRef<HTMLDivElement, ShareTemplateProps>(
       <div ref={ref}>
         {template === "ink" && <InkTemplate quote={quote} />}
         {template === "minimal" && <MinimalTemplate quote={quote} />}
-        {template === "neo" && <NeoTemplate quote={quote} />}
         {template === "mountain" && <MountainTemplate quote={quote} />}
         {template === "starfield" && <StarfieldTemplate quote={quote} />}
         {template === "redwall" && <RedWallTemplate quote={quote} />}
         {template === "zen" && <ZenTemplate quote={quote} />}
-        {template === "sunset" && <SunsetTemplate quote={quote} />}
         {template === "porcelain" && <PorcelainTemplate quote={quote} />}
       </div>
     );

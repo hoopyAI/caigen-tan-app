@@ -11,18 +11,16 @@ interface SharePreviewProps {
 }
 
 const templates: TemplateType[] = [
-  "ink", "minimal", "neo", "mountain", "starfield", "redwall", "zen", "sunset", "porcelain",
+  "ink", "minimal", "mountain", "starfield", "redwall", "zen", "porcelain",
 ];
 
 const templateNames: Record<TemplateType, string> = {
   ink: "水墨",
   minimal: "深夜",
-  neo: "新中式",
   mountain: "远山",
   starfield: "星河",
   redwall: "红墙",
   zen: "枯山水",
-  sunset: "落霞",
   porcelain: "青花",
 };
 
