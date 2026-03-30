@@ -2,33 +2,33 @@
 
 > 输入你的心情，从菜根谭里找到一句说给你听的话。
 
-**Live:** https://rootwisdom.online
+**在线体验：** https://rootwisdom.online
 
-## Features
+## 功能
 
-- AI-powered mood matching — describe how you feel, get the most fitting quote from Caigen Tan (菜根谭)
-- 360 quotes with modern Chinese interpretations
-- 7 wallpaper-quality share image templates (Ink Wash, Dark, Mountain, Starfield, Red Wall, Zen, Blue Porcelain)
-- Favorites (localStorage)
-- Browse the full collection with search by 前集/后集
-- PWA — installable on mobile
+- **AI 心情匹配** — 描述你的心情，AI 从菜根谭中找到最契合的一句
+- **360 条语录** — 菜根谭全文，每条附有白话释义
+- **7 套分享图模板** — 水墨、深夜、远山、星河、红墙、枯山水、青花，壁纸级设计
+- **收藏夹** — 保存喜欢的句子
+- **全文浏览** — 按前集/后集分类浏览
+- **PWA** — 可安装到手机主屏幕
 
-## Tech Stack
+## 技术栈
 
 - Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
-- Azure OpenAI (GPT-4o-mini) for semantic matching
-- html2canvas for share image generation
-- Deployed on Vercel + Cloudflare
+- Azure OpenAI (GPT-4o-mini) 语义匹配
+- html2canvas 分享图生成
+- Vercel 部署 + Cloudflare CDN
 
-## Getting Started
+## 本地开发
 
 ```bash
 npm install
-cp .env.local.example .env.local  # add your Azure OpenAI credentials
+cp .env.local.example .env.local  # 填入 Azure OpenAI 配置
 npm run dev
 ```
 
-## Environment Variables
+## 环境变量
 
 ```
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
