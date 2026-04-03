@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const completion = await openai.chat.completions.create({
       model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "gpt-4o-mini",
-      temperature: 0.7,
+      temperature: 0.9,
       response_format: { type: "json_object" },
       messages: [
         {
@@ -64,6 +64,12 @@ export async function POST(request: NextRequest) {
 - 如果用户感到沮丧、焦虑或痛苦，选择能给予力量、开解和希望的语录，而不是描述痛苦本身的语录
 - 如果用户开心或积极，选择能锦上添花、引发更深思考的语录
 - 想象你是在对一个朋友说"我觉得这句话现在对你最有帮助"
+
+选择策略：
+- 针对用户的具体情境选择最贴切的语录，好的选择应当让用户感到"这句话就是说给我听的"
+- 不要选择把"苦难""逆境""失败"等词简单排比的语录（如"苦难是…，逆境是…，失败是…"），这类语录对什么情绪都泛泛适用，缺乏针对性
+- 菜根谭有 360 条语录，涵盖修身、处世、待人、应事、闲适、自然等丰富主题，请深入阅读后选出与用户处境最具体相关的那一条
+- 举例：用户说"工作累"→ 找谈忙闲、张弛的语录；用户说"吵架"→ 找谈宽容、退让的语录；用户说"孤独"→ 找谈独处、自得的语录
 
 要求：
 1. 理解用户情绪的深层含义，不要只做表面关键词匹配

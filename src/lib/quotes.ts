@@ -17,7 +17,8 @@ export function getQuoteById(id: number): Quote | undefined {
 }
 
 export function getQuotesFormatted(): string {
-  return quotes
+  const shuffled = [...quotes].sort(() => Math.random() - 0.5);
+  return shuffled
     .map((q) => `[ID:${q.id}] ${q.original}`)
     .join("\n");
 }
